@@ -3,7 +3,7 @@
           package="com.example.melikhovva.firstapplication">
 
     <application>
-        <activity android:name= "android.app.Activity">
+        <activity android:name= ".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
