@@ -25,5 +25,7 @@ public final class MainActivity extends Activity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new StringsAdapter(data));
+
+        Connection.request("http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC");
     }
 }
