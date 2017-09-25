@@ -1,6 +1,7 @@
 package com.example.melikhovva.firstapplication;
 
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -8,43 +9,51 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.concurrent.Future;
 
+import javax.net.ssl.HttpsURLConnection;
+
+//TODO: rename
 public final class Connection {
     private static final String MY_TAG = "myLogs";
+    private static final String HTTP_METHOD_GET = "GET";
 
-    public static void request(final @Nullable String urlName){
+    //TODO: rename
+    public static void request(final @NonNull String urlName) {
 
-        if(urlName != null) {
+        startActionOnNewThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final URL url = new URL(urlName);
+                    final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            final Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
+                    connection.setRequestMethod(HTTP_METHOD_GET);
+
                     try {
-                        final URL url = new URL(urlName);
-                        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                        try {
-                            connection.connect();
+                        connection.connect();
 
-                            if (connection.getResponseCode() / 100 == 2) {
-                                final Scanner scanner = new Scanner(connection.getInputStream());
+                        //TODO: magic numbers
+                        if (connection.getResponseCode() / 100 == 2) {
 
-                                while (scanner.hasNextLine()) {
-                                    Log.d(MY_TAG, scanner.nextLine());
-                                }
-                            } else {
-                                Log.d(MY_TAG, String.valueOf(connection.getResponseCode()) + " " + connection.getResponseMessage());
+                            final Scanner scanner = new Scanner(connection.getInputStream());
+
+                            while (scanner.hasNextLine()) {
+                                Log.d(MY_TAG, scanner.nextLine());
                             }
-                        } finally {
-                            connection.disconnect();
+                        } else {
+                            Log.d(MY_TAG, String.valueOf(connection.getResponseCode()) + " " + connection.getResponseMessage());
                         }
-                    } catch (final IOException e) {
-                        Log.e(MY_TAG, e.getMessage());
+                    } finally {
+                        connection.disconnect();
                     }
+                } catch (final IOException e) {
+                    Log.e(MY_TAG, e.getMessage());
                 }
-            });
-            thread.start();
-        } else {
-            Log.e(MY_TAG, "urlName is null");
-        }
+            }
+        });
+    }
+    private static void startActionOnNewThread(final Runnable action) {
+        new Thread(action).start();
     }
 }
