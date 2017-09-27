@@ -4,32 +4,34 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
-import java.util.Arrays;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-
 public final class MainActivity extends Activity {
-
-    private static final int DATA_SIZE = 40;
+    private static final String MY_TAG = "myLogs";
 
     @Override
     protected void onCreate(final @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        final String[] data = new String[DATA_SIZE];
-        Arrays.fill(data, "");
+        new HttpRequest(new HttpRequestListener() {
+            @Override
+            public void interactionFinished(final HttpResponse response) {
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                if (response.getResponseStatus() == ResponseStatus.Successfull) {
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new StringsAdapter(data));
-
-        Connection.request("http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC");
+                    response.getResponseBody().doWithBodyIfExists(new OptionalResponseBody.ActionWithBody(){
+                        public void receive(final String body){
+                            Log.d(MY_TAG, body);
+                        }
+                    });
+                    if (!response.getResponseBody().isExists()) {
+                        Log.d(MY_TAG, "Empty body");
+                    }
+                } else {
+                    Log.d(MY_TAG, response.getResponseStatus().toString());
+                }
+            }
+        }).execute("http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC");
     }
+
 }
