@@ -30,16 +30,16 @@ final class ExistResponseBody implements OptionalResponseBody {
 
     private final String body;
 
-    @Override
-    public boolean isExists() {
-        return true;
-    }
-
     public ExistResponseBody(final @NonNull String body) {
         if (body == null) {
             throw new IllegalArgumentException("No value.");
         }
         this.body = body;
+    }
+
+    @Override
+    public boolean isExists() {
+        return true;
     }
 
     @Override

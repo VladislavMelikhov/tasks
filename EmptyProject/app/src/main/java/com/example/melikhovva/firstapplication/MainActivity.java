@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
+import java.util.Collection;
 
 public final class MainActivity extends Activity {
     private static final String MY_TAG = "myLogs";
@@ -19,9 +20,22 @@ public final class MainActivity extends Activity {
 
                 if (response.getResponseStatus() == ResponseStatus.Successfull) {
 
-                    response.getResponseBody().doWithBodyIfExists(new OptionalResponseBody.ActionWithBody(){
-                        public void receive(final String body){
-                            Log.d(MY_TAG, body);
+                    response.getResponseBody().doWithBodyIfExists(new OptionalResponseBody.ActionWithBody() {
+                        @Override
+                        public void receive(final String body) {
+
+                            final OptionalGifs trendGifs = new JSONParser().parseTrendGifs(body);
+                            trendGifs.doWithGifsIfExists(new OptionalGifs.ActionWithGifs(){
+                                @Override
+                                public void receive(Collection<Gif> gifs) {
+                                    for (Gif gif : gifs) {
+                                        Log.d(MY_TAG, gif.getName() + " " + gif.getUrl());
+                                    }
+                                }
+                            });
+                            if (!trendGifs.isExists()) {
+                                Log.d(MY_TAG, "JSON string is incorrect");
+                            }
                         }
                     });
                     if (!response.getResponseBody().isExists()) {
@@ -33,5 +47,4 @@ public final class MainActivity extends Activity {
             }
         }).execute("http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC");
     }
-
 }
