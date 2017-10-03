@@ -20,13 +20,13 @@ public final class MainActivity extends Activity {
 
                 if (response.getResponseStatus() == ResponseStatus.Successfull) {
 
-                    final OptionalContent<String> optionalResponseBody = response.getResponseBody();
-                    optionalResponseBody.doWithContentIfExists(new OptionalContent.ActionWithContent<String>() {
+                    final Optional<String> optionalResponseBody = response.getResponseBody();
+                    optionalResponseBody.doWithContentIfExists(new Optional.ActionWithContent<String>() {
                         @Override
                         public void receive(final String body) {
 
-                            final OptionalContent<Collection<Gif>> trendGifs = new GifParser().parseTrending(body);
-                            trendGifs.doWithContentIfExists(new OptionalContent.ActionWithContent<Collection<Gif>>() {
+                            final Optional<Collection<Gif>> trendGifs = new GifParser().parseTrending(body);
+                            trendGifs.doWithContentIfExists(new Optional.ActionWithContent<Collection<Gif>>() {
                                 @Override
                                 public void receive(final Collection<Gif> gifs) {
 

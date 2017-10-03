@@ -7,6 +7,7 @@ import java.util.Collection;
 
 public final class GifParser {
 
+    //TODO: replace enum with strings
     private enum JSONKeyStructure {
 
         data;
@@ -27,9 +28,9 @@ public final class GifParser {
         }
     }
 
-    public OptionalContent<Collection<Gif>> parseTrending(final @NonNull String source) {
+    public Optional<Collection<Gif>> parseTrending(final @NonNull String source) {
 
-        new ValidatorNotNull().argumentsValidation(source);
+        new ValidatorNotNull().validateArguments(source);
         final Collection<Gif> gifs = new ArrayList<>();
 
         try {
@@ -38,19 +39,19 @@ public final class GifParser {
 
             for (int i = 0; i < data.length(); i++) {
 
-                final JSONObject currentJSONObject = data.getJSONObject(i);
-                gifs.add(new Gif(currentJSONObject
+                final JSONObject currentGif = data.getJSONObject(i);
+                gifs.add(new Gif(currentGif
                                          .getString(JSONKeyStructure.Data.slug.toString()),
 
-                                 currentJSONObject
+                                 currentGif
                                          .getJSONObject(JSONKeyStructure.Data.images.toString())
                                          .getJSONObject(JSONKeyStructure.Data.Images.original.toString())
                                          .getString(JSONKeyStructure.Data.Images.Original.url.toString())));
             }
-            return new ExistContent<>(gifs);
+            return new Existing<>(gifs);
 
         } catch (final JSONException e) {
-            return new NotExistContent<>();
+            return new NonExistent<>();
         }
     }
 }

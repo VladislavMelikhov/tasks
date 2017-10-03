@@ -5,13 +5,12 @@ import android.support.annotation.NonNull;
 public final class HttpResponse {
 
     private final ResponseStatus responseStatus;
-    private final OptionalContent<String> responseBody;
+    private final Optional<String> responseBody;
 
-    //Add validation!
     public HttpResponse(final @NonNull ResponseStatus responseStatus,
-                        final @NonNull OptionalContent<String> responseBody) {
+                        final @NonNull Optional<String> responseBody) {
 
-        new ValidatorNotNull().argumentsValidation(responseStatus, responseBody);
+        new ValidatorNotNull().validateArguments(responseStatus, responseBody);
         this.responseStatus = responseStatus;
         this.responseBody = responseBody;
     }
@@ -20,7 +19,7 @@ public final class HttpResponse {
         return responseStatus;
     }
 
-    public OptionalContent<String> getResponseBody() {
+    public Optional<String> getResponseBody() {
         return responseBody;
     }
 }

@@ -1,13 +1,14 @@
 package com.example.melikhovva.firstapplication;
 
-public class ValidatorNotNull {
+public final class ValidatorNotNull {
 
-    public void argumentsValidation(final Object... objects) {
+    public void validateArguments(final Object... arguments) {
 
-        if (objects.length > 0) {
+        if (arguments.length > 0) {
 
-            for (final Object object : objects) {
-                if (object == null) {
+            // TODO: print the numper of null argument
+            for (final Object argument : arguments) {
+                if (argument == null) {
                     throw new IllegalArgumentException("No value.");
                 }
             }

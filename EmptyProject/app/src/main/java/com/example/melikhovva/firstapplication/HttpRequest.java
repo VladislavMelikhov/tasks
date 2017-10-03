@@ -20,10 +20,9 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
 
     @Override
     protected HttpResponse doInBackground(final @NonNull String... params) {
+        new ValidatorNotNull().validateArguments(params);
 
         if (params.length > 0) {
-            new ValidatorNotNull().argumentsValidation(params);
-
             try {
                 final URL url = new URL(params[0]);
                 final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -32,6 +31,7 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
                 try {
                     connection.connect();
 
+                    //TODO: response code
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         return readAllText(connection.getInputStream());
                     } else {
@@ -50,7 +50,7 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
 
     private HttpResponse failedHttpResponse() {
         return new HttpResponse(ResponseStatus.Failed,
-                                new NotExistContent<String>());
+                                new NonExistent<String>());
     }
 
     private HttpResponse readAllText(final InputStream inputStream) {
@@ -58,11 +58,11 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
                                     .useDelimiter("\\A");
         if (scanner.hasNext()) {
             return new HttpResponse(ResponseStatus.Successfull,
-                                    new ExistContent<>(scanner.next()));
+                                    new Existing<>(scanner.next()));
 
         } else {
             return new HttpResponse(ResponseStatus.Successfull,
-                                   new NotExistContent<String>());
+                                   new NonExistent<String>());
         }
     }
 

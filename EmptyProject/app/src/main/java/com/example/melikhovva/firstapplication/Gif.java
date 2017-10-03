@@ -8,7 +8,7 @@ public final class Gif {
     private final String url;
 
     public Gif(final @NonNull String name, final @NonNull String url) {
-        new ValidatorNotNull().argumentsValidation(name, url);
+        new ValidatorNotNull().validateArguments(name, url);
         this.name = name;
         this.url = url;
     }
