@@ -7,26 +7,11 @@ import java.util.Collection;
 
 public final class GifParser {
 
-    //TODO: replace enum with strings
-    private enum JSONKeyStructure {
-
-        data;
-
-        enum Data {
-
-            slug, images;
-
-            enum Images {
-
-                original;
-
-                enum Original {
-
-                    url;
-                }
-            }
-        }
-    }
+    private static final String DATA_ARRAY = "data",
+                                SLUG = "slug",
+                                IMAGES = "images",
+                                ORIGINAL = "original",
+                                URL = "url";
 
     public Optional<Collection<Gif>> parseTrending(final @NonNull String source) {
 
@@ -35,18 +20,18 @@ public final class GifParser {
 
         try {
             final JSONArray data = new JSONObject(source)
-                                        .getJSONArray(JSONKeyStructure.data.toString());
+                                        .getJSONArray(DATA_ARRAY);
 
             for (int i = 0; i < data.length(); i++) {
 
                 final JSONObject currentGif = data.getJSONObject(i);
                 gifs.add(new Gif(currentGif
-                                         .getString(JSONKeyStructure.Data.slug.toString()),
+                                         .getString(SLUG),
 
                                  currentGif
-                                         .getJSONObject(JSONKeyStructure.Data.images.toString())
-                                         .getJSONObject(JSONKeyStructure.Data.Images.original.toString())
-                                         .getString(JSONKeyStructure.Data.Images.Original.url.toString())));
+                                         .getJSONObject(IMAGES)
+                                         .getJSONObject(ORIGINAL)
+                                         .getString(URL)));
             }
             return new Existing<>(gifs);
 

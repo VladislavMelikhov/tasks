@@ -18,7 +18,7 @@ public final class MainActivity extends Activity {
             @Override
             public void interactionFinished(final HttpResponse response) {
 
-                if (response.getResponseStatus() == ResponseStatus.Successfull) {
+                if (response.getResponseStatus() == ResponseStatus.Successful) {
 
                     final Optional<String> optionalResponseBody = response.getResponseBody();
                     optionalResponseBody.doWithContentIfExists(new Optional.ActionWithContent<String>() {

@@ -11,6 +11,8 @@ import java.util.Scanner;
 public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
 
     private static final String HTTP_METHOD_GET = "GET";
+    private static final int SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND = 100,
+                             SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND = 299;
 
     private final HttpRequestListener httpRequestListener;
 
@@ -31,8 +33,10 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
                 try {
                     connection.connect();
 
-                    //TODO: response code
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    final int responseCode = connection.getResponseCode();
+                    if (SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND <= responseCode &&
+                        responseCode <= SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND) {
+
                         return readAllText(connection.getInputStream());
                     } else {
                         return failedHttpResponse();
@@ -57,11 +61,11 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
         final Scanner scanner = new Scanner(inputStream)
                                     .useDelimiter("\\A");
         if (scanner.hasNext()) {
-            return new HttpResponse(ResponseStatus.Successfull,
+            return new HttpResponse(ResponseStatus.Successful,
                                     new Existing<>(scanner.next()));
 
         } else {
-            return new HttpResponse(ResponseStatus.Successfull,
+            return new HttpResponse(ResponseStatus.Successful,
                                    new NonExistent<String>());
         }
     }

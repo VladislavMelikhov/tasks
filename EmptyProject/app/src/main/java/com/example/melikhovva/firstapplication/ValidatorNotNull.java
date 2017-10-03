@@ -6,10 +6,9 @@ public final class ValidatorNotNull {
 
         if (arguments.length > 0) {
 
-            // TODO: print the numper of null argument
-            for (final Object argument : arguments) {
-                if (argument == null) {
-                    throw new IllegalArgumentException("No value.");
+            for (int i = 0; i < arguments.length; i++) {
+                if (arguments[i] == null) {
+                    throw new IllegalArgumentException("No value " + i + " argument");
                 }
             }
         }
