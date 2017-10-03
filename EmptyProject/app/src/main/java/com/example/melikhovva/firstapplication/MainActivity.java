@@ -8,7 +8,7 @@ import android.util.Log;
 import java.util.Collection;
 
 public final class MainActivity extends Activity {
-    private static final String MY_TAG = "myLogs";
+    private static final String MY_TAG = "myLogsMain";
 
     @Override
     protected void onCreate(final @Nullable Bundle savedInstanceState) {
@@ -20,15 +20,17 @@ public final class MainActivity extends Activity {
 
                 if (response.getResponseStatus() == ResponseStatus.Successfull) {
 
-                    response.getResponseBody().doWithBodyIfExists(new OptionalResponseBody.ActionWithBody() {
+                    final OptionalContent<String> optionalResponseBody = response.getResponseBody();
+                    optionalResponseBody.doWithContentIfExists(new OptionalContent.ActionWithContent<String>() {
                         @Override
                         public void receive(final String body) {
 
-                            final OptionalGifs trendGifs = new JSONParser().parseTrendGifs(body);
-                            trendGifs.doWithGifsIfExists(new OptionalGifs.ActionWithGifs(){
+                            final OptionalContent<Collection<Gif>> trendGifs = new GifParser().parseTrending(body);
+                            trendGifs.doWithContentIfExists(new OptionalContent.ActionWithContent<Collection<Gif>>() {
                                 @Override
-                                public void receive(Collection<Gif> gifs) {
-                                    for (Gif gif : gifs) {
+                                public void receive(final Collection<Gif> gifs) {
+
+                                    for (final Gif gif : gifs) {
                                         Log.d(MY_TAG, gif.getName() + " " + gif.getUrl());
                                     }
                                 }
@@ -38,7 +40,7 @@ public final class MainActivity extends Activity {
                             }
                         }
                     });
-                    if (!response.getResponseBody().isExists()) {
+                    if (!optionalResponseBody.isExists()) {
                         Log.d(MY_TAG, "Empty body");
                     }
                 } else {

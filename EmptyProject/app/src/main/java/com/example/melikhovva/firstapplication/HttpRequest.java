@@ -2,7 +2,6 @@ package com.example.melikhovva.firstapplication;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -19,21 +18,11 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
         this.httpRequestListener = httpRequestListener;
     }
 
-    private HttpResponse failedHttpResponse() {
-        return new HttpResponse(ResponseStatus.Failed,
-                                new NotExistResponseBody());
-    }
-
-    private Scanner readAllTextScanner(final InputStream inputStream) {
-        return new Scanner(inputStream)
-                    .useDelimiter("\\A");
-
-    }
-
     @Override
     protected HttpResponse doInBackground(final @NonNull String... params) {
 
         if (params.length > 0) {
+            new ValidatorNotNull().argumentsValidation(params);
 
             try {
                 final URL url = new URL(params[0]);
@@ -44,15 +33,7 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
                     connection.connect();
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
-                        final Scanner scanner = readAllTextScanner(connection.getInputStream());
-                        if (scanner.hasNext()) {
-                            return new HttpResponse(ResponseStatus.Successfull,
-                                                    new ExistResponseBody(scanner.next()));
-                        } else {
-                            return new HttpResponse(ResponseStatus.Successfull,
-                                                    new NotExistResponseBody());
-                        }
+                        return readAllText(connection.getInputStream());
                     } else {
                         return failedHttpResponse();
                     }
@@ -64,6 +45,24 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
             }
         } else {
             return failedHttpResponse();
+        }
+    }
+
+    private HttpResponse failedHttpResponse() {
+        return new HttpResponse(ResponseStatus.Failed,
+                                new NotExistContent<String>());
+    }
+
+    private HttpResponse readAllText(final InputStream inputStream) {
+        final Scanner scanner = new Scanner(inputStream)
+                                    .useDelimiter("\\A");
+        if (scanner.hasNext()) {
+            return new HttpResponse(ResponseStatus.Successfull,
+                                    new ExistContent<>(scanner.next()));
+
+        } else {
+            return new HttpResponse(ResponseStatus.Successfull,
+                                   new NotExistContent<String>());
         }
     }
 
