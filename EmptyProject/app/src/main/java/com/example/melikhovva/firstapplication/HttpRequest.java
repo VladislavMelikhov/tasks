@@ -22,7 +22,7 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
 
     @Override
     protected HttpResponse doInBackground(final @NonNull String... params) {
-        new ValidatorNotNull().validateArguments(params);
+        ValidatorNotNull.validateArguments(params);
 
         if (params.length > 0) {
             try {

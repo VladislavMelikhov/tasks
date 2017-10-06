@@ -3,7 +3,7 @@ package com.example.melikhovva.firstapplication;
 import android.support.annotation.NonNull;
 import org.json.*;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 public final class GifParser {
 
@@ -13,10 +13,10 @@ public final class GifParser {
                                 ORIGINAL = "original",
                                 URL = "url";
 
-    public Optional<Collection<Gif>> parseTrending(final @NonNull String source) {
+    public Optional<List<Gif>> parseTrending(final @NonNull String source) {
 
-        new ValidatorNotNull().validateArguments(source);
-        final Collection<Gif> gifs = new ArrayList<>();
+        ValidatorNotNull.validateArguments(source);
+        final List<Gif> gifs = new ArrayList<>();
 
         try {
             final JSONArray data = new JSONObject(source)

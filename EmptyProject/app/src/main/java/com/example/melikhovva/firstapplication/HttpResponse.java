@@ -10,7 +10,7 @@ public final class HttpResponse {
     public HttpResponse(final @NonNull ResponseStatus responseStatus,
                         final @NonNull Optional<String> responseBody) {
 
-        new ValidatorNotNull().validateArguments(responseStatus, responseBody);
+        ValidatorNotNull.validateArguments(responseStatus, responseBody);
         this.responseStatus = responseStatus;
         this.responseBody = responseBody;
     }

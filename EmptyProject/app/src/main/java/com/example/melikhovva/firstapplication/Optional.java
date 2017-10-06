@@ -18,7 +18,7 @@ final class Existing<Content> implements Optional<Content> {
     private final Content content;
 
     public Existing(final @NonNull Content content) {
-        new ValidatorNotNull().validateArguments(content);
+        ValidatorNotNull.validateArguments(content);
         this.content = content;
     }
 

@@ -4,15 +4,21 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
-import java.util.Collection;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
+import java.util.List;
 
 public final class MainActivity extends Activity {
-    private static final String MY_TAG = "myLogsMain";
+    private static final int COLUMN_COUNT = 4,
+                             SPACE_SIZE = 2;
+
 
     @Override
     protected void onCreate(final @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
 
         new HttpRequest(new HttpRequestListener() {
             @Override
@@ -25,26 +31,29 @@ public final class MainActivity extends Activity {
                         @Override
                         public void receive(final String body) {
 
-                            final Optional<Collection<Gif>> trendGifs = new GifParser().parseTrending(body);
-                            trendGifs.doWithContentIfExists(new Optional.ActionWithContent<Collection<Gif>>() {
+                            final Optional<List<Gif>> trendGifs = new GifParser().parseTrending(body);
+                            trendGifs.doWithContentIfExists(new Optional.ActionWithContent<List<Gif>>() {
                                 @Override
-                                public void receive(final Collection<Gif> gifs) {
+                                public void receive(final List<Gif> gifs) {
 
-                                    for (final Gif gif : gifs) {
-                                        Log.d(MY_TAG, gif.getName() + " " + gif.getUrl());
-                                    }
+                                    final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                                    recyclerView.setHasFixedSize(true);
+                                    recyclerView.addItemDecoration(new SpacesItemDecoration(gifs.size(),
+                                                                                            COLUMN_COUNT,
+                                                                                            convertDpToPixels(SPACE_SIZE)));
+
+                                    recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,
+                                                                                        COLUMN_COUNT));
+
+                                    recyclerView.setAdapter(new GifsAdapter(MainActivity.this,
+                                                                            gifs));
+                                }
+                                private int convertDpToPixels(final int dp) {
+                                    return (int) getResources().getDisplayMetrics().density * dp;
                                 }
                             });
-                            if (!trendGifs.isExists()) {
-                                Log.d(MY_TAG, "JSON string is incorrect");
-                            }
                         }
                     });
-                    if (!optionalResponseBody.isExists()) {
-                        Log.d(MY_TAG, "Empty body");
-                    }
-                } else {
-                    Log.d(MY_TAG, response.getResponseStatus().toString());
                 }
             }
         }).execute("http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC");
