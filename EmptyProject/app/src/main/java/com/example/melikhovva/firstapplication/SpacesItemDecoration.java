@@ -6,23 +6,25 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+
 public final class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
-    private final int columnCount,
-                      rowCount,
-                      spaceSize;
+    private final int columnCount;
+    private final int rowCount;
+    private final int spaceSize;
 
-    public SpacesItemDecoration(final int gifCount, final int columnCount, final int spaceSize) {
-        validateArguments(gifCount, columnCount, spaceSize);
+    public SpacesItemDecoration(final int rowCount, final int columnCount, final int spaceSize) {
+        validateArguments(rowCount, columnCount, spaceSize);
 
+        this.rowCount = rowCount;
         this.columnCount = columnCount;
-        this.rowCount = (int) Math.ceil((double)gifCount / columnCount);
         this.spaceSize = spaceSize;
     }
 
-    private void validateArguments(final int gifCount, final int columnsCount, final int spaceSize) {
+    private void validateArguments(final int rowCount, final int columnsCount, final int spaceSize) {
 
-        if (gifCount <= 0) {
+        //TODO: duplication
+        if (rowCount <= 0) {
             throw new IllegalArgumentException("Gif count should be at least 1");
 
         } else if (columnsCount <= 0) {

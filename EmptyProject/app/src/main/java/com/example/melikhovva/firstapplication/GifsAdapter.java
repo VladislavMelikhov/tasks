@@ -1,6 +1,7 @@
 package com.example.melikhovva.firstapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,42 +13,17 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
-public final class GifsAdapter extends RecyclerView.Adapter<GifsAdapter.ViewHolder> {
+public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    private final Context context;
     private final List<Gif> gifs;
 
-
-    final class ViewHolder extends RecyclerView.ViewHolder {
-
-        private final ImageView imageView;
-
-        public ViewHolder(final @NonNull RelativeLayout relativeLayout, final @NonNull ImageView imageView) {
-            super(relativeLayout);
-
-            ValidatorNotNull.validateArguments(imageView);
-            this.imageView = imageView;
-
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Toast.makeText(context,
-                                   gifs.get(getAdapterPosition())
-                                       .getName(),
-                                   Toast.LENGTH_SHORT)
-                         .show();
-                }
-            });
-        }
-    }
-
-    public GifsAdapter(final @NonNull Context context, final @NonNull List<Gif> gifs) {
-        ValidatorNotNull.validateArguments(context, gifs);
+    public GifsAdapter(final @NonNull List<Gif> gifs) {
+        ValidatorNotNull.validateArguments(gifs);
         ValidatorNotNull.validateArguments(gifs.toArray());
-        this.context = context;
         this.gifs = gifs;
     }
 
@@ -66,14 +42,42 @@ public final class GifsAdapter extends RecyclerView.Adapter<GifsAdapter.ViewHold
     @Override
     public void onBindViewHolder(final @NonNull ViewHolder holder, final int position) {
         ValidatorNotNull.validateArguments(holder);
-        Glide.with(context)
-            .load(gifs.get(position).getUrl())
-            .asGif()
-            .into(holder.imageView);
+        holder.setGif(gifs.get(position));
     }
 
     @Override
     public int getItemCount() {
         return gifs.size();
+    }
+}
+
+final class ViewHolder extends RecyclerView.ViewHolder {
+
+    private final ImageView imageView;
+
+
+    public ViewHolder(final @NonNull RelativeLayout relativeLayout, final @NonNull ImageView imageView) {
+        super(relativeLayout);
+
+        ValidatorNotNull.validateArguments(imageView);
+        this.imageView = imageView;
+    }
+
+    public void setGif(final @NonNull Gif gif) {
+        ValidatorNotNull.validateArguments(gif);
+
+        Glide.with(imageView.getContext())
+                .load(gif.getUrl())
+                .asGif()
+                .into(imageView);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                final Intent intent = new Intent(view.getContext(), DetailGifActivity.class);
+                intent.putExtra(DetailGifActivity.DETAIL_GIF, gif);
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 }

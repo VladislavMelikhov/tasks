@@ -7,11 +7,11 @@ import java.util.List;
 
 public final class GifParser {
 
-    private static final String DATA_ARRAY = "data",
-                                SLUG = "slug",
-                                IMAGES = "images",
-                                ORIGINAL = "original",
-                                URL = "url";
+    private static final String DATA_ARRAY = "data";
+    private static final String SLUG = "slug";
+    private static final String IMAGES = "images";
+    private static final String ORIGINAL = "original";
+    private static final String URL = "url";
 
     public Optional<List<Gif>> parseTrending(final @NonNull String source) {
 

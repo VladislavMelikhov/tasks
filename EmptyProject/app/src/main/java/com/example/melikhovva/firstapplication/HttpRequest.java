@@ -11,8 +11,8 @@ import java.util.Scanner;
 public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
 
     private static final String HTTP_METHOD_GET = "GET";
-    private static final int SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND = 100,
-                             SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND = 299;
+    private static final int SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND = 200;
+    private static final int SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND = 299;
 
     private final HttpRequestListener httpRequestListener;
 

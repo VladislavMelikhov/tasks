@@ -7,11 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+
 import java.util.List;
 
 public final class MainActivity extends Activity {
-    private static final int COLUMN_COUNT = 4,
-                             SPACE_SIZE = 2;
+    private static final int COLUMN_COUNT = 4;
+    private static final int SPACE_SIZE_DP = 2;
 
 
     @Override
@@ -38,18 +39,14 @@ public final class MainActivity extends Activity {
 
                                     final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
                                     recyclerView.setHasFixedSize(true);
-                                    recyclerView.addItemDecoration(new SpacesItemDecoration(gifs.size(),
+                                    recyclerView.addItemDecoration(new SpacesItemDecoration((int) Math.ceil((double)gifs.size() / COLUMN_COUNT),
                                                                                             COLUMN_COUNT,
-                                                                                            convertDpToPixels(SPACE_SIZE)));
+                                                                                            (int) getResources().getDisplayMetrics().density * SPACE_SIZE_DP));
 
                                     recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,
                                                                                         COLUMN_COUNT));
 
-                                    recyclerView.setAdapter(new GifsAdapter(MainActivity.this,
-                                                                            gifs));
-                                }
-                                private int convertDpToPixels(final int dp) {
-                                    return (int) getResources().getDisplayMetrics().density * dp;
+                                    recyclerView.setAdapter(new GifsAdapter(gifs));
                                 }
                             });
                         }
