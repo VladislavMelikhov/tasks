@@ -53,6 +53,7 @@ public final class DetailGifActivity extends AppCompatActivity {
                                                         .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                                         .get();
 
+                            //TODO: write in internal memory
                             final File target = new File(getExternalFilesDir(null), gif.getName() + ".gif");
 
                             if (new FileWriter().writeToFileReadFrom(target, source)) {
