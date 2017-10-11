@@ -1,6 +1,5 @@
 package com.example.melikhovva.firstapplication;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -10,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -30,11 +27,14 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(final @NonNull ViewGroup parent, final int viewType) {
         ValidatorNotNull.validateArguments(parent);
+        //TODO: CHANGE TO VIEW
         final RelativeLayout relativeLayout = (SquareRelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item,
                                                                                                                       parent,
                                                                                                                       false);
+        //TODO: DO IN CONSTRUCTOR
         relativeLayout.setBackgroundColor(Color.BLUE);
 
+        //TODO: REMOVE IMAGEVIEW
         return new ViewHolder(relativeLayout,
                               (ImageView) relativeLayout.findViewById(R.id.image_view));
     }

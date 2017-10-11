@@ -25,7 +25,7 @@ public final class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
         //TODO: duplication
         if (rowCount <= 0) {
-            throw new IllegalArgumentException("Gif count should be at least 1");
+            throw new IllegalArgumentException("Row count should be at least 1");
 
         } else if (columnsCount <= 0) {
             throw new IllegalArgumentException("Column count should be at least 1");

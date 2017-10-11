@@ -3,11 +3,12 @@ package com.example.melikhovva.firstapplication;
 import android.app.Activity;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 public final class MainActivity extends Activity {

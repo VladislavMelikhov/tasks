@@ -1,5 +1,6 @@
 package com.example.melikhovva.firstapplication;
 
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import java.io.File;
@@ -25,6 +26,7 @@ public final class FileWriter {
             while ((length = in.read(buffer)) > 0) {
                 out.write(buffer, 0, length);
             }
+            //TODO: close streams
             in.close();
             out.close();
             return true;

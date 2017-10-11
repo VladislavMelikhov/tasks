@@ -26,7 +26,7 @@ public final class DetailGifActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_gif);
 
-        final Gif gif = getIntent().getParcelableExtra(DETAIL_GIF);
+        final Gif gif = (Gif) getIntent().getSerializableExtra(DETAIL_GIF);
         initializeToolBar(gif.getName());
 
         findViewById(R.id.square_relative_layout).setBackgroundColor(Color.BLUE);
@@ -37,6 +37,7 @@ public final class DetailGifActivity extends AppCompatActivity {
                 .asGif()
                 .into(imageView);
 
+        //TODO: code structure!
         findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -56,6 +57,7 @@ public final class DetailGifActivity extends AppCompatActivity {
 
                             if (new FileWriter().writeToFileReadFrom(target, source)) {
 
+                                //TODO: What to do if app is closed
                                 if (new FileComparator().compare(target, source)) {
                                     Log.d(MY_TAG, "File has written successfully");
                                 } else {

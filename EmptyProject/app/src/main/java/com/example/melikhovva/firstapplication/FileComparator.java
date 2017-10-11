@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-public final class FileComparator{
+public final class FileComparator {
 
     private static final int BUFFER_SIZE = 1024;
 

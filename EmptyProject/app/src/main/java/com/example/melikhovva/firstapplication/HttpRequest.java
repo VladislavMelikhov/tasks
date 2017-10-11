@@ -1,6 +1,7 @@
 package com.example.melikhovva.firstapplication;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,20 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
     @Override
     protected HttpResponse doInBackground(final @NonNull String... params) {
         ValidatorNotNull.validateArguments(params);
+
+        //TODO: receive mainThreadHandler
+//
+//        final Handler mainThreadHandler = null;
+//        final Runnable onSuccess = null;
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                // network or file action
+//
+//                mainThreadHandler.post(onSuccess);
+//            }
+//        });
 
         if (params.length > 0) {
             try {
