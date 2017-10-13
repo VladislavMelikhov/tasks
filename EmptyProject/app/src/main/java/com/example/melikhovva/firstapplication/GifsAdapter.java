@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -27,16 +26,9 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(final @NonNull ViewGroup parent, final int viewType) {
         ValidatorNotNull.validateArguments(parent);
-        //TODO: CHANGE TO VIEW
-        final RelativeLayout relativeLayout = (SquareRelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item,
-                                                                                                                      parent,
-                                                                                                                      false);
-        //TODO: DO IN CONSTRUCTOR
-        relativeLayout.setBackgroundColor(Color.BLUE);
-
-        //TODO: REMOVE IMAGEVIEW
-        return new ViewHolder(relativeLayout,
-                              (ImageView) relativeLayout.findViewById(R.id.image_view));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item,
+                                                                               parent,
+                                                                               false));
     }
 
     @Override
@@ -56,11 +48,11 @@ final class ViewHolder extends RecyclerView.ViewHolder {
     private final ImageView imageView;
 
 
-    public ViewHolder(final @NonNull RelativeLayout relativeLayout, final @NonNull ImageView imageView) {
-        super(relativeLayout);
+    public ViewHolder(final @NonNull View view) {
+        super(view);
 
-        ValidatorNotNull.validateArguments(imageView);
-        this.imageView = imageView;
+        imageView = (ImageView) view.findViewById(R.id.image_view);
+        view.setBackgroundColor(Color.BLUE);
     }
 
     public void setGif(final @NonNull Gif gif) {

@@ -1,6 +1,5 @@
 package com.example.melikhovva.firstapplication;
 
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import java.io.File;
@@ -14,12 +13,12 @@ public final class FileWriter {
 
     private static final int BUFFER_SIZE = 1024;
 
-    public boolean writeToFileReadFrom(final @NonNull File target, final @NonNull File source) {
-        ValidatorNotNull.validateArguments(target, source);
+    public boolean copy(final @NonNull File source, final @NonNull File destination) {
+        ValidatorNotNull.validateArguments(destination, source);
 
         try {
             final InputStream in = new FileInputStream(source);
-            final OutputStream out = new FileOutputStream(target);
+            final OutputStream out = new FileOutputStream(destination);
 
             final byte[] buffer = new byte[BUFFER_SIZE];
             int length;

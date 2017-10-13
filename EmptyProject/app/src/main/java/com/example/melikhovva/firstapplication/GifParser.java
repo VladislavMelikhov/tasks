@@ -12,6 +12,7 @@ public final class GifParser {
     private static final String IMAGES = "images";
     private static final String ORIGINAL = "original";
     private static final String URL = "url";
+    private static final String ID = "id";
 
     public Optional<List<Gif>> parseTrending(final @NonNull String source) {
 
@@ -31,7 +32,10 @@ public final class GifParser {
                                  currentGif
                                          .getJSONObject(IMAGES)
                                          .getJSONObject(ORIGINAL)
-                                         .getString(URL)));
+                                         .getString(URL),
+
+                                 currentGif
+                                         .getString(ID)));
             }
             return new Existing<>(gifs);
 

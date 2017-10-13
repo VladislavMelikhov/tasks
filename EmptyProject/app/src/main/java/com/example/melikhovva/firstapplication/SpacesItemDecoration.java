@@ -10,24 +10,19 @@ import android.view.View;
 public final class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
     private final int columnCount;
-    private final int rowCount;
     private final int spaceSize;
 
-    public SpacesItemDecoration(final int rowCount, final int columnCount, final int spaceSize) {
-        validateArguments(rowCount, columnCount, spaceSize);
+    public SpacesItemDecoration(final int columnCount, final int spaceSize) {
+        validateArguments(columnCount, spaceSize);
 
-        this.rowCount = rowCount;
         this.columnCount = columnCount;
         this.spaceSize = spaceSize;
     }
 
-    private void validateArguments(final int rowCount, final int columnsCount, final int spaceSize) {
+    private void validateArguments(final int columnsCount, final int spaceSize) {
 
         //TODO: duplication
-        if (rowCount <= 0) {
-            throw new IllegalArgumentException("Row count should be at least 1");
-
-        } else if (columnsCount <= 0) {
+        if (columnsCount <= 0) {
             throw new IllegalArgumentException("Column count should be at least 1");
 
         } else if (spaceSize < 0) {
@@ -50,7 +45,6 @@ public final class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         outRect.left = spaceSize * (columnCount - columnIndex) / columnCount;
         outRect.right = spaceSize * (columnIndex + 1) / columnCount;
 
-        outRect.top = spaceSize * (rowCount - rowIndex) / rowCount;
-        outRect.bottom = spaceSize * (rowIndex + 1) / rowCount;
+        outRect.top = spaceSize;
     }
 }

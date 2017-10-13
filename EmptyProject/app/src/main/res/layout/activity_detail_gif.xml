@@ -25,6 +25,12 @@
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save"/>
+        android:text="@string/button_save"/>
+
+    <Button
+        android:id="@+id/view_saved_gifs_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_view_saved"/>
 
 </LinearLayout>

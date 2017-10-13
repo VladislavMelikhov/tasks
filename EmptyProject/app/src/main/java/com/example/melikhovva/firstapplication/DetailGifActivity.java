@@ -1,5 +1,8 @@
 package com.example.melikhovva.firstapplication;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,56 +30,18 @@ public final class DetailGifActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_gif);
 
         final Gif gif = (Gif) getIntent().getSerializableExtra(DETAIL_GIF);
-        initializeToolBar(gif.getName());
 
+        final SharedPreferences mappingIdToName = getSharedPreferences(getString(R.string.file_ids_and_names_of_saved_gifs),
+                                                                       Context.MODE_PRIVATE);
+
+        configureToolBar(gif.getName());
         findViewById(R.id.square_relative_layout).setBackgroundColor(Color.BLUE);
-
-        final ImageView imageView = (ImageView) findViewById(R.id.image_view);
-        Glide.with(this)
-                .load(gif.getUrl())
-                .asGif()
-                .into(imageView);
-
-        //TODO: code structure!
-        findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-
-                startActionOnNewThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-
-                            final File source = Glide.with(imageView.getContext())
-                                                        .load(gif.getUrl())
-                                                        .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                                        .get();
-
-                            //TODO: write in internal memory
-                            final File target = new File(getExternalFilesDir(null), gif.getName() + ".gif");
-
-                            if (new FileWriter().writeToFileReadFrom(target, source)) {
-
-                                //TODO: What to do if app is closed
-                                if (new FileComparator().compare(target, source)) {
-                                    Log.d(MY_TAG, "File has written successfully");
-                                } else {
-                                    Log.e(MY_TAG, "Written fail is incorrect");
-                                }
-                            } else {
-                                Log.e(MY_TAG, "Failed by writing to file");
-                            }
-                        } catch (final Exception e) {
-                            Log.e(MY_TAG, e.getMessage());
-                        }
-                    }
-                });
-            }
-        });
+        configureSaveButton(mappingIdToName, gif);
+        configureSavedGifsButton();
+        displayGif(gif);
     }
 
-    private void initializeToolBar(final String title) {
+    private void configureToolBar(final String title) {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         toolbar.setTitle(title);
@@ -91,7 +56,79 @@ public final class DetailGifActivity extends AppCompatActivity {
         });
     }
 
+    private void configureSaveButton(final SharedPreferences mappingIdToName, final Gif gif) {
+        final View saveButton = findViewById(R.id.save_button);
+
+        if (mappingIdToName.contains(gif.getId())) {
+            saveButton.setEnabled(false);
+
+        } else {
+            saveButton.setEnabled(true);
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+
+                    startActionOnNewThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (!mappingIdToName.contains(gif.getId())) {
+
+                                try {
+
+                                    final File source = Glide.with(DetailGifActivity.this)
+                                                            .load(gif.getUrl())
+                                                            .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                                            .get();
+
+                                    final File destination = new File(getFilesDir(), gif.getId());
+
+                                    if (new FileWriter().copy(source, destination)) {
+
+                                        if (new FileComparator().compare(source, destination)) {
+                                            mappingIdToName.edit()
+                                                            .putString(gif.getId(), gif.getName())
+                                                            .apply();
+
+                                            Log.d(MY_TAG, "File has written successfully");
+
+                                        } else {
+                                            Log.d(MY_TAG, "Written file is incorrect");
+                                        }
+                                    } else {
+                                        Log.d(MY_TAG, "Failed by writing to file");
+                                    }
+                                } catch (final Exception e) {
+                                    Log.d(MY_TAG, "Source file is incorrect");
+                                }
+                            } else {
+                                Log.d(MY_TAG, "File has already been written");
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     private void startActionOnNewThread(final Runnable action) {
         new Thread(action).start();
+    }
+
+    private void configureSavedGifsButton() {
+        findViewById(R.id.view_saved_gifs_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                final Intent intent = new Intent(view.getContext(), SavedGifsActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    private void displayGif(final Gif gif) {
+        Glide.with(this)
+                .load(gif.getUrl())
+                .asGif()
+                .into((ImageView) findViewById(R.id.image_view));
     }
 }

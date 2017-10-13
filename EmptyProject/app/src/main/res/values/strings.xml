@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button_save">Save</string>
+    <string name="button_view_saved">View saved GIFs</string>
+    <string name="file_ids_and_names_of_saved_gifs">ids_and_names_of_saved_gifs</string>
+</resources>
