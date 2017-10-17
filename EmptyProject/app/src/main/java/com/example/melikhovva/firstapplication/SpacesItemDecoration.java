@@ -40,7 +40,6 @@ public final class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
         final int viewPosition = parent.getChildLayoutPosition(view);
         final int columnIndex = viewPosition % columnCount;
-        final int rowIndex = viewPosition / columnCount;
 
         outRect.left = spaceSize * (columnCount - columnIndex) / columnCount;
         outRect.right = spaceSize * (columnIndex + 1) / columnCount;

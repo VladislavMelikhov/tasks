@@ -23,6 +23,14 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.gifs = gifs;
     }
 
+    public void addAll(final @NonNull List<Gif> gifs) {
+        ValidatorNotNull.validateArguments(gifs);
+        ValidatorNotNull.validateArguments(gifs.toArray());
+
+        this.gifs.addAll(gifs);
+        notifyItemRangeInserted(getItemCount(), gifs.size());
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(final @NonNull ViewGroup parent, final int viewType) {
         ValidatorNotNull.validateArguments(parent);
