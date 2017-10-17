@@ -1,11 +1,9 @@
 package com.example.melikhovva.firstapplication;
 
-
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 
 public final class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -19,10 +17,10 @@ public final class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         this.spaceSize = spaceSize;
     }
 
-    private void validateArguments(final int columnsCount, final int spaceSize) {
+    private void validateArguments(final int columnCount, final int spaceSize) {
 
         //TODO: duplication
-        if (columnsCount <= 0) {
+        if (columnCount <= 0) {
             throw new IllegalArgumentException("Column count should be at least 1");
 
         } else if (spaceSize < 0) {

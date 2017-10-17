@@ -1,5 +1,6 @@
 package com.example.melikhovva.firstapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -55,7 +56,6 @@ final class ViewHolder extends RecyclerView.ViewHolder {
 
     private final ImageView imageView;
 
-
     public ViewHolder(final @NonNull View view) {
         super(view);
 
@@ -66,7 +66,9 @@ final class ViewHolder extends RecyclerView.ViewHolder {
     public void setGif(final @NonNull Gif gif) {
         ValidatorNotNull.validateArguments(gif);
 
-        Glide.with(imageView.getContext())
+        final Context context = imageView.getContext();
+
+        Glide.with(context)
                 .load(gif.getUrl())
                 .asGif()
                 .into(imageView);
@@ -74,9 +76,9 @@ final class ViewHolder extends RecyclerView.ViewHolder {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent intent = new Intent(view.getContext(), DetailGifActivity.class);
+                final Intent intent = new Intent(context, DetailGifActivity.class);
                 intent.putExtra(DetailGifActivity.DETAIL_GIF, gif);
-                view.getContext().startActivity(intent);
+                context.startActivity(intent);
             }
         });
     }

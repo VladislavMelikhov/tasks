@@ -21,8 +21,6 @@ public final class MainActivity extends Activity {
         new RecyclerViewConfigurator().setGifGrid(recyclerView,
                                                   new ArrayList<Gif>());
 
-
-
         final GifsAdapter adapter = (GifsAdapter) recyclerView.getAdapter();
 
         doWithGifsIfLoaded(adapter.getItemCount(), getResources().getInteger(R.integer.initial_gifs_count), new Optional.ActionWithContent<List<Gif>>() {
@@ -55,13 +53,13 @@ public final class MainActivity extends Activity {
 
                 if (response.getResponseStatus() == ResponseStatus.Successful) {
 
-                    final Optional<String> optionalResponseBody = response.getResponseBody();
-                    optionalResponseBody.doWithContentIfExists(new Optional.ActionWithContent<String>() {
+                    response.getResponseBody()
+                            .doWithContentIfExists(new Optional.ActionWithContent<String>() {
                         @Override
                         public void receive(final String body) {
 
-                            final Optional<List<Gif>> trendGifs = new GifParser().parseTrending(body);
-                            trendGifs.doWithContentIfExists(actionWithGifs);
+                            new GifParser().parseTrending(body)
+                                            .doWithContentIfExists(actionWithGifs);
                         }
                     });
                 }

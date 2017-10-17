@@ -22,12 +22,9 @@ public final class RecyclerViewConfigurator {
 
         recyclerView.addItemDecoration(new SpacesItemDecoration(columnCount,
                                                                 resources.getDimensionPixelOffset(R.dimen.space_size_dp)));
+        recyclerView.setAdapter(new GifsAdapter(gifs));
 
-        final GifsAdapter gifsAdapter = new GifsAdapter(gifs);
-        recyclerView.setAdapter(gifsAdapter);
-
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(context,
-                                                                          columnCount);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(new GridLayoutManager(context,
+                                                            columnCount));
     }
 }

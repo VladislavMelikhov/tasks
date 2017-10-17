@@ -1,6 +1,5 @@
 package com.example.melikhovva.firstapplication;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,9 +14,7 @@ import android.support.v7.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 
-
 import java.io.File;
-
 
 public final class DetailGifActivity extends AppCompatActivity {
 
@@ -31,12 +28,12 @@ public final class DetailGifActivity extends AppCompatActivity {
 
         final Gif gif = (Gif) getIntent().getSerializableExtra(DETAIL_GIF);
 
-        final SharedPreferences mappingIdToName = getSharedPreferences(getString(R.string.file_ids_and_names_of_saved_gifs),
-                                                                       Context.MODE_PRIVATE);
-
         configureToolBar(gif.getName());
         findViewById(R.id.square_relative_layout).setBackgroundColor(Color.BLUE);
-        configureSaveButton(mappingIdToName, gif);
+
+        configureSaveButton(new AccessSharedPreferences().getIdsAndNamesOfSavedGifs(this),
+                            gif);
+
         configureSavedGifsButton();
         displayGif(gif);
     }
@@ -56,14 +53,15 @@ public final class DetailGifActivity extends AppCompatActivity {
         });
     }
 
-    private void configureSaveButton(final SharedPreferences mappingIdToName, final Gif gif) {
+    private void configureSaveButton(final SharedPreferences nameById, final Gif gif) {
         final View saveButton = findViewById(R.id.save_button);
 
-        if (mappingIdToName.contains(gif.getId())) {
-            saveButton.setEnabled(false);
+        final String gifId = gif.getId();
+        final boolean containsId = nameById.contains(gifId);
+        saveButton.setEnabled(!containsId);
 
-        } else {
-            saveButton.setEnabled(true);
+        if (!containsId) {
+
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
@@ -72,7 +70,7 @@ public final class DetailGifActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            if (!mappingIdToName.contains(gif.getId())) {
+                            if (!nameById.contains(gifId)) {
 
                                 try {
 
@@ -81,28 +79,28 @@ public final class DetailGifActivity extends AppCompatActivity {
                                                             .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                                             .get();
 
-                                    final File destination = new File(getFilesDir(), gif.getId());
+                                    final File destination = new File(getFilesDir(), gifId);
 
                                     if (new FileWriter().copy(source, destination)) {
 
                                         if (new FileComparator().compare(source, destination)) {
-                                            mappingIdToName.edit()
-                                                            .putString(gif.getId(), gif.getName())
-                                                            .apply();
+                                            nameById.edit()
+                                                    .putString(gifId, gif.getName())
+                                                    .apply();
 
-                                            Log.d(MY_TAG, "File has written successfully");
+                                            log("File has written successfully");
 
                                         } else {
-                                            Log.d(MY_TAG, "Written file is incorrect");
+                                            log("Written file is incorrect");
                                         }
                                     } else {
-                                        Log.d(MY_TAG, "Failed by writing to file");
+                                        log("Failed by writing to file");
                                     }
                                 } catch (final Exception e) {
-                                    Log.d(MY_TAG, "Source file is incorrect");
+                                    log("Source file is incorrect");
                                 }
                             } else {
-                                Log.d(MY_TAG, "File has already been written");
+                                log("File has already been written");
                             }
                         }
                     });
@@ -115,12 +113,16 @@ public final class DetailGifActivity extends AppCompatActivity {
         new Thread(action).start();
     }
 
+    private void log(final String message) {
+        Log.d(MY_TAG, message);
+    }
+
     private void configureSavedGifsButton() {
         findViewById(R.id.view_saved_gifs_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final Intent intent = new Intent(view.getContext(), SavedGifsActivity.class);
-                view.getContext().startActivity(intent);
+                view.getContext().startActivity(new Intent(view.getContext(),
+                                                           SavedGifsActivity.class));
             }
         });
     }

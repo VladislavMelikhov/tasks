@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 
 public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener {
 
-    public boolean loading;
+    private boolean loading;
     private final GridLayoutManager gridLayoutManager;
 
     public EndlessScrollListener(final @NonNull GridLayoutManager gridLayoutManager) {
@@ -31,10 +31,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
 
             final int visibleThreshold = recyclerView.getContext().getResources().getInteger(R.integer.column_count);
 
-            final int totalItemCount = gridLayoutManager.getItemCount();
-            final int lastVisibleItemPosition = gridLayoutManager.findLastVisibleItemPosition() + 1;
-
-            if (!loading && (lastVisibleItemPosition + visibleThreshold >= totalItemCount)) {
+            if (!loading && (gridLayoutManager.findLastVisibleItemPosition() + 1 + visibleThreshold >= gridLayoutManager.getItemCount())) {
                 loadingStarted();
                 loadMore();
             }
