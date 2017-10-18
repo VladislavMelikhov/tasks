@@ -10,8 +10,8 @@ import java.util.List;
 
 public final class RecyclerViewConfigurator {
 
-    public void setGifGrid(final @NonNull RecyclerView recyclerView, final @NonNull List<Gif> gifs) {
-        ValidatorNotNull.validateArguments(recyclerView, gifs);
+    public void setGifGrid(final @NonNull RecyclerView recyclerView, final @NonNull List<Gif> gifs, final @NonNull Scrollable scrollable) {
+        ValidatorNotNull.validateArguments(recyclerView, gifs, scrollable);
         ValidatorNotNull.validateArguments(gifs.toArray());
 
         recyclerView.setHasFixedSize(true);
@@ -20,11 +20,26 @@ public final class RecyclerViewConfigurator {
         final Resources resources = context.getResources();
         final int columnCount = resources.getInteger(R.integer.column_count);
 
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(context,
+                                                                          columnCount);
+        final GifsAdapter gifsAdapter = new GifsAdapter(gifs);
+
         recyclerView.addItemDecoration(new SpacesItemDecoration(columnCount,
                                                                 resources.getDimensionPixelOffset(R.dimen.space_size_dp)));
-        recyclerView.setAdapter(new GifsAdapter(gifs));
+        recyclerView.setAdapter(gifsAdapter);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(context,
-                                                            columnCount));
+        recyclerView.setLayoutManager(gridLayoutManager);
+
+        recyclerView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
+            @Override
+            public void loadMore() {
+                scrollable.onScroll(gifsAdapter, new Runnable(){
+                    @Override
+                    public void run() {
+                        loadingFinished();
+                    }
+                });
+            }
+        });
     }
 }

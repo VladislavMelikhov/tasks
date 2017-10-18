@@ -10,18 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    private final List<Gif> gifs;
+    private final List<Gif> gifs = new ArrayList<>();
 
     public GifsAdapter(final @NonNull List<Gif> gifs) {
         ValidatorNotNull.validateArguments(gifs);
         ValidatorNotNull.validateArguments(gifs.toArray());
-        this.gifs = gifs;
+        this.gifs.addAll(gifs);
     }
 
     public void addAll(final @NonNull List<Gif> gifs) {
@@ -68,10 +67,7 @@ final class ViewHolder extends RecyclerView.ViewHolder {
 
         final Context context = imageView.getContext();
 
-        Glide.with(context)
-                .load(gif.getUrl())
-                .asGif()
-                .into(imageView);
+        new GifLoaderFactory(context).newInstance().loadAndDisplay(gif, imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

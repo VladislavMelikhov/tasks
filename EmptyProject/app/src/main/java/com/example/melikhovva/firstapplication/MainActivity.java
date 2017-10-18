@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,28 +18,27 @@ public final class MainActivity extends Activity {
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         new RecyclerViewConfigurator().setGifGrid(recyclerView,
-                                                  new ArrayList<Gif>());
+                                                  new ArrayList<Gif>(),
+                                                  new Scrollable() {
+                                                      @Override
+                                                      public void onScroll(final GifsAdapter adapter, final Runnable callback) {
+                                                          doWithGifsIfLoaded(adapter.getItemCount(), getResources().getInteger(R.integer.loading_gifs_count), new Optional.ActionWithContent<List<Gif>>() {
+                                                              @Override
+                                                              public void receive(final List<Gif> gifs) {
+                                                                  adapter.addAll(gifs);
+                                                                  callback.run();
+                                                              }
+                                                          });
+                                                      }
+                                                  });
 
+        //TODO: class cast
         final GifsAdapter adapter = (GifsAdapter) recyclerView.getAdapter();
 
         doWithGifsIfLoaded(adapter.getItemCount(), getResources().getInteger(R.integer.initial_gifs_count), new Optional.ActionWithContent<List<Gif>>() {
             @Override
             public void receive(final List<Gif> gifs) {
                 adapter.addAll(gifs);
-            }
-        });
-
-        recyclerView.addOnScrollListener(new EndlessScrollListener((GridLayoutManager) recyclerView.getLayoutManager()) {
-            @Override
-            public void loadMore() {
-
-                doWithGifsIfLoaded(adapter.getItemCount(), getResources().getInteger(R.integer.loading_gifs_count), new Optional.ActionWithContent<List<Gif>>() {
-                    @Override
-                    public void receive(final List<Gif> gifs) {
-                        adapter.addAll(gifs);
-                        loadingFinished();
-                    }
-                });
             }
         });
     }
