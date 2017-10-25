@@ -11,7 +11,7 @@ public final class GifsStorage {
 
     private static GifsStorage gifsStorage;
 
-    public static GifsStorage getGifsStorage(final @NonNull Context context) {
+    public static void init(final @NonNull Context context) {
         ValidatorNotNull.validateArguments(context);
 
         if (gifsStorage == null) {
@@ -21,8 +21,19 @@ public final class GifsStorage {
                                           new Directory(context.getFilesDir()),
                                           new StringByKey(context.getSharedPreferences(context.getString(R.string.file_ids_and_names_of_saved_gifs),
                                                                                        Context.MODE_PRIVATE)));
+        } else {
+            throw new IllegalStateException("GifsStorage has already been initialized");
         }
-        return gifsStorage;
+    }
+
+    public static GifsStorage getInstance() {
+
+        if (gifsStorage == null) {
+            throw new IllegalStateException("GifsStorage has not been initialized");
+
+        } else {
+            return gifsStorage;
+        }
     }
 
     private static final String KEY = "SAVED_TRENDING_GIFS";

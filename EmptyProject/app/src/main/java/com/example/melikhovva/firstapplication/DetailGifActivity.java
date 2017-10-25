@@ -46,7 +46,7 @@ public final class DetailGifActivity extends AppCompatActivity {
         final View saveButton = findViewById(R.id.save_button);
         saveButton.setEnabled(false);
 
-        final GifsStorage gifsStorage = GifsStorage.getGifsStorage(this);
+        final GifsStorage gifsStorage = GifsStorage.getInstance();
         gifsStorage.doIfNotContains(gif, new Runnable() {
             @Override
             public void run() {
