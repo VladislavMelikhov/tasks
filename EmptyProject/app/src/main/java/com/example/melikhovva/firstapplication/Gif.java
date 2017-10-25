@@ -28,4 +28,22 @@ public final class Gif implements Serializable {
     public String getId() {
         return id;
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+
+        } else if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+
+        } else {
+            return id.equals(((Gif) obj).id);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

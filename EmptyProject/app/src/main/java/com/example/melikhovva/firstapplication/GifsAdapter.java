@@ -67,11 +67,12 @@ final class ViewHolder extends RecyclerView.ViewHolder {
 
         final Context context = imageView.getContext();
 
-        new GifLoaderFactory(context).newInstance().loadAndDisplay(gif, imageView);
+        new GifLoader(context).loadAndDisplay(gif, imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+                //TODO: go to new activity
                 final Intent intent = new Intent(context, DetailGifActivity.class);
                 intent.putExtra(DetailGifActivity.DETAIL_GIF, gif);
                 context.startActivity(intent);

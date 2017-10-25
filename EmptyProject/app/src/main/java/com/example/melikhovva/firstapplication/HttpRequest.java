@@ -1,7 +1,7 @@
 package com.example.melikhovva.firstapplication;
 
-import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,60 +9,50 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
+public final class HttpRequest {
 
     private static final String HTTP_METHOD_GET = "GET";
     private static final int SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND = 200;
     private static final int SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND = 299;
 
-    private final HttpRequestListener httpRequestListener;
+    public void execute(final @NonNull String url, final @NonNull HttpRequestListener httpRequestListener) {
+        ValidatorNotNull.validateArguments(url, httpRequestListener);
 
-    public HttpRequest(final HttpRequestListener httpRequestListener) {
-        this.httpRequestListener = httpRequestListener;
+        new ThreadCreator().startActionOnNewThread(new Runnable() {
+            @Override
+            public void run() {
+                final HttpResponse response = doInBackground(url);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        httpRequestListener.interactionFinished(response);
+                    }
+                });
+            }
+        });
     }
 
-    @Override
-    protected HttpResponse doInBackground(final @NonNull String... params) {
-        ValidatorNotNull.validateArguments(params);
+    private HttpResponse doInBackground(final String url) {
+        try {
+            final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod(HTTP_METHOD_GET);
 
-        //TODO: receive mainThreadHandler
-//
-//        final Handler mainThreadHandler = null;
-//        final Runnable onSuccess = null;
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                // network or file action
-//
-//                mainThreadHandler.post(onSuccess);
-//            }
-//        });
-
-        if (params.length > 0) {
             try {
-                final URL url = new URL(params[0]);
-                final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod(HTTP_METHOD_GET);
+                connection.connect();
 
-                try {
-                    connection.connect();
+                final int responseCode = connection.getResponseCode();
+                if (SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND <= responseCode &&
+                    responseCode <= SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND) {
+                    return readAllText(connection.getInputStream());
 
-                    final int responseCode = connection.getResponseCode();
-                    if (SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND <= responseCode &&
-                        responseCode <= SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND) {
-
-                        return readAllText(connection.getInputStream());
-                    } else {
-                        return failedHttpResponse();
-                    }
-                } finally {
-                    connection.disconnect();
+                } else {
+                    return failedHttpResponse();
                 }
-            } catch (final IOException e) {
-                return failedHttpResponse();
+            } finally {
+                connection.disconnect();
             }
-        } else {
+        } catch (final IOException e) {
             return failedHttpResponse();
         }
     }
@@ -83,10 +73,5 @@ public final class HttpRequest extends AsyncTask<String, Void, HttpResponse> {
             return new HttpResponse(ResponseStatus.Successful,
                                    new NonExistent<String>());
         }
-    }
-
-    @Override
-    protected void onPostExecute(final HttpResponse response) {
-        httpRequestListener.interactionFinished(response);
     }
 }

@@ -1,14 +1,45 @@
 package com.example.melikhovva.firstapplication;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
+
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
-//TODO: rename class
-public interface GifLoader {
+public final class GifLoader {
 
-    void loadAndDisplay(@NonNull Gif gif, @NonNull ImageView imageView);
+    private final Context context;
 
-    Optional<File> load(@NonNull Gif gif);
+    public GifLoader(final @NonNull Context context) {
+        ValidatorNotNull.validateArguments(context);
+        this.context = context;
+    }
+
+    public void loadAndDisplay(final @NonNull Gif gif, final @NonNull ImageView imageView) {
+        ValidatorNotNull.validateArguments(gif, imageView);
+        Glide.with(context)
+                .load(gif.getUrl())
+                .asGif()
+                .into(imageView);
+    }
+
+    public Optional<File> load(final @NonNull Gif gif) {
+        ValidatorNotNull.validateArguments(gif);
+        try {
+            return new Existing<>(Glide.with(context)
+                                          .load(gif.getUrl())
+                                          .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                          .get());
+
+        } catch (final InterruptedException e) {
+            return new NonExistent<>();
+
+        } catch (final ExecutionException e) {
+            return new NonExistent<>();
+        }
+    }
 }
