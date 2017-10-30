@@ -15,10 +15,10 @@ public final class HttpRequest {
     private static final int SUCCESSFUL_RESPONSE_CODE_LOWER_BOUND = 200;
     private static final int SUCCESSFUL_RESPONSE_CODE_UPPER_BOUND = 299;
 
-    public void execute(final @NonNull String url, final @NonNull HttpRequestListener httpRequestListener) {
+    public HttpRequest(final @NonNull String url, final @NonNull HttpRequestListener httpRequestListener) {
         ValidatorNotNull.validateArguments(url, httpRequestListener);
 
-        new ThreadCreator().startActionOnNewThread(new Runnable() {
+        new ActionStarter().startOnNewThread(new Runnable() {
             @Override
             public void run() {
                 final HttpResponse response = doInBackground(url);

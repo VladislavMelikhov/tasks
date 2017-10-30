@@ -15,11 +15,11 @@ public final class GifsStorage {
         ValidatorNotNull.validateArguments(context);
 
         if (gifsStorage == null) {
-            gifsStorage = new GifsStorage(new GifLoader(context),
+            gifsStorage = new GifsStorage(GifLoader.getInstance(),
                                           new FileWriter(),
-                                          new GifsConverter(),
+                                          GifsConverter.getInstance(),
                                           new Directory(context.getFilesDir()),
-                                          new StringByKey(context.getSharedPreferences(context.getString(R.string.file_ids_and_names_of_saved_gifs),
+                                          new StringByKey(context.getSharedPreferences(NAME_OF_SAVED_GIFS_FILE,
                                                                                        Context.MODE_PRIVATE)));
         } else {
             throw new IllegalStateException("GifsStorage has already been initialized");
@@ -36,7 +36,10 @@ public final class GifsStorage {
         }
     }
 
+    //TODO: rename key
     private static final String KEY = "SAVED_TRENDING_GIFS";
+    //TODO: rename file
+    private static final String NAME_OF_SAVED_GIFS_FILE = "ids_and_names_of_saved_gifs";
 
     private final GifLoader gifLoader;
     private final FileWriter fileWriter;
@@ -95,8 +98,8 @@ public final class GifsStorage {
             @Override
             public void receive(final List<Gif> gifs) {
 
-                if (!gifs.contains(gif)) {
-                    new ThreadCreator().startActionOnNewThread(new Runnable() {
+                if (!containsGifWithId(gifs, gif.getId())) {
+                    new ActionStarter().startOnNewThread(new Runnable() {
                         @Override
                         public void run() {
 
@@ -105,7 +108,7 @@ public final class GifsStorage {
                                         @Override
                                         public void receive(final File source) {
 
-                                            final File destination = new File(directory.getDirectory(),
+                                            final File destination = new File(directory.getAsFile(),
                                                                               gif.getId());
                                             if (fileWriter.copy(source, destination)) {
 
@@ -142,10 +145,21 @@ public final class GifsStorage {
             @Override
             public void receive(final List<Gif> gifs) {
 
-                if (!gifs.contains(gif)) {
+                if (!containsGifWithId(gifs, gif.getId())) {
                     action.run();
                 }
             }
         });
+    }
+
+    private boolean containsGifWithId(final List<Gif> gifs, final String id) {
+
+        for (final Gif gif : gifs) {
+
+            if (gif.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

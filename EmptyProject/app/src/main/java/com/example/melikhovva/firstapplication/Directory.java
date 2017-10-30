@@ -14,13 +14,13 @@ public final class Directory {
         this.directory = directory;
     }
 
-    private void validateDirectory(final File pathname) {
-        if (!pathname.isDirectory()) {
+    private void validateDirectory(final File directory) {
+        if (!directory.isDirectory()) {
             throw new IllegalArgumentException("The file denoted by this pathname is not a directory");
         }
     }
 
-    public File getDirectory() {
+    public File getAsFile() {
         return directory;
     }
 }

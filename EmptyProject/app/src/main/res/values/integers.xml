@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="column_count">4</integer>
+    <integer name="initial_trending_gifs_count">25</integer>
+    <integer name="additional_loading_trending_gifs_count">20</integer>
+    <integer name="searching_gifs_count">10</integer>
+</resources>

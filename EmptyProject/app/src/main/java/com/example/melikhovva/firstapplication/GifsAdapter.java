@@ -31,10 +31,19 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
         notifyItemRangeInserted(getItemCount(), gifs.size());
     }
 
+    public void clear() {
+        final int gifsSize = gifs.size();
+        for (final Gif gif : gifs) {
+            GifLoader.getInstance().stopLoading(gif);
+        }
+        gifs.clear();
+        notifyItemRangeRemoved(0, gifsSize);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(final @NonNull ViewGroup parent, final int viewType) {
         ValidatorNotNull.validateArguments(parent);
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item,
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.square_image,
                                                                                parent,
                                                                                false));
     }
@@ -67,7 +76,7 @@ final class ViewHolder extends RecyclerView.ViewHolder {
 
         final Context context = imageView.getContext();
 
-        new GifLoader(context).loadAndDisplay(gif, imageView);
+        GifLoader.getInstance().loadAndDisplay(gif, imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

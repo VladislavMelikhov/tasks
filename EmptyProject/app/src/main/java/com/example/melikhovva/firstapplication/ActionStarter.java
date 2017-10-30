@@ -2,9 +2,9 @@ package com.example.melikhovva.firstapplication;
 
 import android.support.annotation.NonNull;
 
-public final class ThreadCreator {
+public final class ActionStarter {
 
-    public void startActionOnNewThread(final @NonNull Runnable action) {
+    public void startOnNewThread(final @NonNull Runnable action) {
         ValidatorNotNull.validateArguments(action);
         new Thread(action).start();
     }

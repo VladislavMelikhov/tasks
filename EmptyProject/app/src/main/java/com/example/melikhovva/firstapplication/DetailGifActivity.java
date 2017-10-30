@@ -77,6 +77,6 @@ public final class DetailGifActivity extends AppCompatActivity {
     }
 
     private void displayGif(final Gif gif) {
-        new GifLoader(this).loadAndDisplay(gif, (ImageView) findViewById(R.id.image_view));
+        GifLoader.getInstance().loadAndDisplay(gif, (ImageView) findViewById(R.id.image_view));
     }
 }
