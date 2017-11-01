@@ -79,7 +79,7 @@ final class ViewHolder extends RecyclerView.ViewHolder {
 
         final Context context = imageView.getContext();
 
-        GifLoader.getInstance().loadAndDisplay(gif, imageView);
+        InstancesHolder.getGifLoader().loadAndDisplay(gif, imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +93,6 @@ final class ViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void clearView() {
-        GifLoader.getInstance().stopLoading(imageView);
+        InstancesHolder.getGifLoader().stopLoading(imageView);
     }
 }

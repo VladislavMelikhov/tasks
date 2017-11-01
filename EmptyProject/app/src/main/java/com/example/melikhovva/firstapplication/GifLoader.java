@@ -12,32 +12,9 @@ import java.util.concurrent.ExecutionException;
 
 public final class GifLoader {
 
-    private static GifLoader gifLoader;
-
-    public static void init(final @NonNull Context context) {
-        ValidatorNotNull.validateArguments(context);
-
-        if (gifLoader == null) {
-            gifLoader = new GifLoader(context);
-
-        } else {
-            throw new IllegalStateException("GifLoader has already been initialized");
-        }
-    }
-
-    public static GifLoader getInstance() {
-
-        if (gifLoader == null) {
-            throw new IllegalStateException("GifLoader has not been initialized");
-
-        } else {
-            return gifLoader;
-        }
-    }
-
     private final Context context;
 
-    private GifLoader(final @NonNull Context context) {
+    public GifLoader(final @NonNull Context context) {
         ValidatorNotNull.validateArguments(context);
         this.context = context;
     }

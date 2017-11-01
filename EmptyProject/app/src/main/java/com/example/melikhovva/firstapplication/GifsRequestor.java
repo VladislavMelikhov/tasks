@@ -8,32 +8,6 @@ import java.util.List;
 
 public final class GifsRequestor {
 
-    private static GifsRequestor gifRequestor;
-
-    public static void init() {
-
-        if (gifRequestor == null) {
-            gifRequestor = new GifsRequestor();
-
-        } else {
-            throw new IllegalStateException("GifsRequestor has already been initialized");
-        }
-    }
-
-    public static GifsRequestor getInstance() {
-
-        if (gifRequestor == null) {
-            throw new IllegalStateException("GifsRequestor has not been initialized");
-
-        } else {
-            return gifRequestor;
-        }
-    }
-
-    private GifsRequestor() {
-
-    }
-
     private static final String ENCODING = "UTF-8";
 
     public void requestTrending(final int offset,
@@ -99,7 +73,7 @@ public final class GifsRequestor {
                                 @Override
                                 public void receive(final String body) {
 
-                                    GifsConverter.getInstance().convertFromJSON(body)
+                                    InstancesHolder.getGifsConverter().convertFromJSON(body)
                                             .doWithContentIfExists(actionWithGifs);
                                 }
                             });

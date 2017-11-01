@@ -9,37 +9,8 @@ import java.util.List;
 
 public final class GifsStorage {
 
-    private static GifsStorage gifsStorage;
-
-    public static void init(final @NonNull Context context) {
-        ValidatorNotNull.validateArguments(context);
-
-        if (gifsStorage == null) {
-            gifsStorage = new GifsStorage(GifLoader.getInstance(),
-                                          new FileWriter(),
-                                          GifsConverter.getInstance(),
-                                          new Directory(context.getFilesDir()),
-                                          new StringByKey(context.getSharedPreferences(NAME_OF_SAVED_GIFS_FILE,
-                                                                                       Context.MODE_PRIVATE)));
-        } else {
-            throw new IllegalStateException("GifsStorage has already been initialized");
-        }
-    }
-
-    public static GifsStorage getInstance() {
-
-        if (gifsStorage == null) {
-            throw new IllegalStateException("GifsStorage has not been initialized");
-
-        } else {
-            return gifsStorage;
-        }
-    }
-
     //TODO: rename key
     private static final String KEY = "SAVED_TRENDING_GIFS";
-    //TODO: rename file
-    private static final String NAME_OF_SAVED_GIFS_FILE = "ids_and_names_of_saved_gifs";
 
     private final GifLoader gifLoader;
     private final FileWriter fileWriter;
@@ -47,11 +18,11 @@ public final class GifsStorage {
     private final Directory directory;
     private final StringByKey stringByKey;
 
-    private GifsStorage(final @NonNull GifLoader gifLoader,
-                        final @NonNull FileWriter fileWriter,
-                        final @NonNull GifsConverter gifsConverter,
-                        final @NonNull Directory directory,
-                        final @NonNull StringByKey stringByKey) {
+    public GifsStorage(final @NonNull GifLoader gifLoader,
+                       final @NonNull FileWriter fileWriter,
+                       final @NonNull GifsConverter gifsConverter,
+                       final @NonNull Directory directory,
+                       final @NonNull StringByKey stringByKey) {
 
         ValidatorNotNull.validateArguments(gifLoader, fileWriter, gifsConverter, directory, stringByKey);
         this.gifLoader = gifLoader;

@@ -46,7 +46,7 @@ public final class DetailGifActivity extends AppCompatActivity {
         final View saveButton = findViewById(R.id.save_button);
         saveButton.setEnabled(false);
 
-        final GifsStorage gifsStorage = GifsStorage.getInstance();
+        final GifsStorage gifsStorage = InstancesHolder.getGifsStorage();
         gifsStorage.doIfNotContains(gif, new Runnable() {
             @Override
             public void run() {
@@ -77,6 +77,7 @@ public final class DetailGifActivity extends AppCompatActivity {
     }
 
     private void displayGif(final Gif gif) {
-        GifLoader.getInstance().loadAndDisplay(gif, (ImageView) findViewById(R.id.image_view));
+        InstancesHolder.getGifLoader().loadAndDisplay(gif,
+                                                      (ImageView) findViewById(R.id.image_view));
     }
 }

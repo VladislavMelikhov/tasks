@@ -11,13 +11,13 @@ public final class SearchingGifsDataLoader {
                               final @NonNull Optional.ActionWithContent<List<Gif>> actionWithGifs) {
         ValidatorNotNull.validateArguments(phrase, actionWithGifs);
 
-        GifsRequestor.getInstance().requestForPhrase(limit,
-                                                     phrase,
-                                                     new Optional.ActionWithContent<List<Gif>>() {
-                                                         @Override
-                                                         public void receive(final List<Gif> gifs) {
-                                                             actionWithGifs.receive(gifs);
-                                                         }
-                                                     });
+        InstancesHolder.getGifsRequestor().requestForPhrase(limit,
+                                                            phrase,
+                                                            new Optional.ActionWithContent<List<Gif>>() {
+                                                                @Override
+                                                                public void receive(final List<Gif> gifs) {
+                                                                    actionWithGifs.receive(gifs);
+                                                                }
+                                                            });
     }
 }

@@ -5,9 +5,6 @@ public final class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        GifLoader.init(this);
-        GifsRequestor.init();
-        GifsConverter.init();
-        GifsStorage.init(this);
+        InstancesHolder.init(this);
     }
 }

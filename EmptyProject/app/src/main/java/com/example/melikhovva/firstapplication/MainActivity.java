@@ -21,16 +21,16 @@ public final class MainActivity extends AppCompatActivity {
 
         configureToolBar(getString(R.string.main_activity_toolbar_text));
 
-        GifsRequestor.getInstance().requestTrending(0,
-                                                    getResources().getInteger(R.integer.initial_trending_gifs_count),
-                                                    new Optional.ActionWithContent<List<Gif>>() {
-                                                        @Override
-                                                        public void receive(final List<Gif> gifs) {
-                                                            new EndlessGifsGrid((RecyclerView) findViewById(R.id.recycler_view),
-                                                                                gifs,
-                                                                                new AdditionalGifsDataLoader());
-                                                        }
-                                                    });
+        InstancesHolder.getGifsRequestor().requestTrending(0,
+                                                           getResources().getInteger(R.integer.initial_trending_gifs_count),
+                                                           new Optional.ActionWithContent<List<Gif>>() {
+                                                               @Override
+                                                               public void receive(final List<Gif> gifs) {
+                                                                   new EndlessGifsGrid((RecyclerView) findViewById(R.id.recycler_view),
+                                                                                       gifs,
+                                                                                       new AdditionalGifsDataLoader());
+                                                               }
+                                                           });
     }
 
     private void configureToolBar(final String title) {

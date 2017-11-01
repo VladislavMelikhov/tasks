@@ -13,7 +13,7 @@ public final class SavedGifsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_view);
 
-        GifsStorage.getInstance().doWithGifsIfExists(new Optional.ActionWithContent<List<Gif>>() {
+        InstancesHolder.getGifsStorage().doWithGifsIfExists(new Optional.ActionWithContent<List<Gif>>() {
             @Override
             public void receive(final List<Gif> gifs) {
                 new GifsGrid((RecyclerView) findViewById(R.id.recycler_view),

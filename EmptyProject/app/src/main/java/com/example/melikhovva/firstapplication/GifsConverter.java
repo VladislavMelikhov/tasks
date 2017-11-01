@@ -7,32 +7,6 @@ import java.util.List;
 
 public final class GifsConverter {
 
-    private static GifsConverter gifConverter;
-
-    public static void init() {
-
-        if (gifConverter == null) {
-            gifConverter = new GifsConverter();
-
-        } else {
-            throw new IllegalStateException("GifsConverter has already been initialized");
-        }
-    }
-
-    public static GifsConverter getInstance() {
-
-        if (gifConverter == null) {
-            throw new IllegalStateException("GifsConverter has not been initialized");
-
-        } else {
-            return gifConverter;
-        }
-    }
-
-    private GifsConverter() {
-
-    }
-
     private static final String DATA_ARRAY = "data";
     private static final String SLUG = "slug";
     private static final String IMAGES = "images";

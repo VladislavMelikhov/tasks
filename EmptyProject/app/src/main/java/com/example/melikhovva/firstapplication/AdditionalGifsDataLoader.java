@@ -15,15 +15,15 @@ public final class AdditionalGifsDataLoader {
 
         if (loadingAllowed) {
             loadingAllowed = false;
-            GifsRequestor.getInstance().requestTrending(offset,
-                                                        limit,
-                                                        new Optional.ActionWithContent<List<Gif>>() {
-                                                            @Override
-                                                            public void receive(final List<Gif> gifs) {
-                                                                actionWithGifs.receive(gifs);
-                                                                loadingAllowed = true;
-                                                            }
-                                                        });
+            InstancesHolder.getGifsRequestor().requestTrending(offset,
+                                                               limit,
+                                                               new Optional.ActionWithContent<List<Gif>>() {
+                                                                   @Override
+                                                                   public void receive(final List<Gif> gifs) {
+                                                                       actionWithGifs.receive(gifs);
+                                                                       loadingAllowed = true;
+                                                                   }
+                                                               });
         }
     }
 }
