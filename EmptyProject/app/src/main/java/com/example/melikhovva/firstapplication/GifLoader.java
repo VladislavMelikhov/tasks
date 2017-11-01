@@ -8,8 +8,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public final class GifLoader {
@@ -38,12 +36,10 @@ public final class GifLoader {
     }
 
     private final Context context;
-    private final Map<Gif, ImageView> imageViewByGif;
 
     private GifLoader(final @NonNull Context context) {
         ValidatorNotNull.validateArguments(context);
         this.context = context;
-        imageViewByGif = new HashMap<>();
     }
 
     public void loadAndDisplay(final @NonNull Gif gif, final @NonNull ImageView imageView) {
@@ -51,16 +47,13 @@ public final class GifLoader {
         Glide.with(context)
                 .load(gif.getUrl())
                 .asGif()
+                .skipMemoryCache(true)
                 .into(imageView);
-        imageViewByGif.put(gif, imageView);
     }
 
-    public void stopLoading(final @NonNull Gif gif) {
-        ValidatorNotNull.validateArguments(gif);
-        final ImageView imageView = imageViewByGif.get(gif);
-        if (imageView != null) {
-            Glide.clear(imageView);
-        }
+    public void stopLoading(final @NonNull ImageView imageView) {
+        ValidatorNotNull.validateArguments(imageView);
+        Glide.clear(imageView);
     }
 
     public Optional<File> load(final @NonNull Gif gif) {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,6 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void clear() {
         final int gifsSize = gifs.size();
-        for (final Gif gif : gifs) {
-            GifLoader.getInstance().stopLoading(gif);
-        }
         gifs.clear();
         notifyItemRangeRemoved(0, gifsSize);
     }
@@ -52,6 +50,11 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(final @NonNull ViewHolder holder, final int position) {
         ValidatorNotNull.validateArguments(holder);
         holder.setGif(gifs.get(position));
+    }
+
+    @Override
+    public void onViewRecycled(final ViewHolder holder) {
+        holder.clearView();
     }
 
     @Override
@@ -87,5 +90,9 @@ final class ViewHolder extends RecyclerView.ViewHolder {
                 context.startActivity(intent);
             }
         });
+    }
+
+    public void clearView() {
+        GifLoader.getInstance().stopLoading(imageView);
     }
 }
