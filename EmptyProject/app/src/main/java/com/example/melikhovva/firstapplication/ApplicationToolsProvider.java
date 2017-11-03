@@ -9,9 +9,6 @@ public final class ApplicationToolsProvider {
     private final GifsRequestor gifsRequestor;
     private final GifsStorage gifsStorage;
 
-    //TODO: rename file
-    private static final String NAME_OF_SAVED_GIFS_FILE = "ids_and_names_of_saved_gifs";
-
     public ApplicationToolsProvider(final @NonNull Context context) {
         ValidatorNotNull.validateArguments(context);
 
@@ -23,8 +20,7 @@ public final class ApplicationToolsProvider {
                                       new FileWriter(),
                                       gifsConverter,
                                       new Directory(context.getFilesDir()),
-                                      new StringByKey(context.getSharedPreferences(NAME_OF_SAVED_GIFS_FILE,
-                                                                                   Context.MODE_PRIVATE)));
+                                      new StringsPreferencesCreator(context));
     }
 
     public GifLoader getGifLoader() {

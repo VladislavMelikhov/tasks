@@ -1,6 +1,5 @@
 package com.example.melikhovva.firstapplication;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.io.File;
@@ -9,6 +8,8 @@ import java.util.List;
 
 public final class GifsStorage {
 
+    //TODO: rename file
+    private static final String NAME_OF_SAVED_GIFS_FILE = "ids_and_names_of_saved_gifs";
     //TODO: rename key
     private static final String KEY = "SAVED_TRENDING_GIFS";
 
@@ -16,27 +17,27 @@ public final class GifsStorage {
     private final FileWriter fileWriter;
     private final GifsConverter gifsConverter;
     private final Directory directory;
-    private final StringByKey stringByKey;
+    private final StringsPreferences stringsPreferences;
 
     public GifsStorage(final @NonNull GifLoader gifLoader,
                        final @NonNull FileWriter fileWriter,
                        final @NonNull GifsConverter gifsConverter,
                        final @NonNull Directory directory,
-                       final @NonNull StringByKey stringByKey) {
+                       final @NonNull StringsPreferencesCreator stringsPreferencesCreator) {
 
-        ValidatorNotNull.validateArguments(gifLoader, fileWriter, gifsConverter, directory, stringByKey);
+        ValidatorNotNull.validateArguments(gifLoader, fileWriter, gifsConverter, directory, stringsPreferencesCreator);
         this.gifLoader = gifLoader;
         this.fileWriter = fileWriter;
         this.gifsConverter = gifsConverter;
         this.directory = directory;
-        this.stringByKey = stringByKey;
+        this.stringsPreferences = stringsPreferencesCreator.create(NAME_OF_SAVED_GIFS_FILE);
 
         makeFirstRecord();
     }
 
     private void makeFirstRecord() {
 
-        if (!stringByKey.getString(KEY).isExists()) {
+        if (!stringsPreferences.getString(KEY).isExists()) {
             writeGifs(new ArrayList<Gif>());
         }
     }
@@ -45,7 +46,7 @@ public final class GifsStorage {
     public void doWithGifsIfExists(final @NonNull Optional.ActionWithContent<List<Gif>> actionWithGifs) {
         ValidatorNotNull.validateArguments(actionWithGifs);
 
-        stringByKey.getString(KEY)
+        stringsPreferences.getString(KEY)
                 .doWithContentIfExists(new Optional.ActionWithContent<String>() {
                     @Override
                     public void receive(final String string) {
@@ -104,7 +105,7 @@ public final class GifsStorage {
                         @Override
                         public void receive(final String string) {
 
-                            stringByKey.putString(KEY, string);
+                            stringsPreferences.putString(KEY, string);
                         }
                     });
     }

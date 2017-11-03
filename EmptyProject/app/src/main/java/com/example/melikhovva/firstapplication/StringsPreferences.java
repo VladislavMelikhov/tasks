@@ -2,13 +2,12 @@ package com.example.melikhovva.firstapplication;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-public final class StringByKey {
+public final class StringsPreferences {
 
     private final SharedPreferences sharedPreferences;
 
-    public StringByKey(final @NonNull SharedPreferences sharedPreferences) {
+    public StringsPreferences(final @NonNull SharedPreferences sharedPreferences) {
         ValidatorNotNull.validateArguments(sharedPreferences);
         this.sharedPreferences = sharedPreferences;
     }
