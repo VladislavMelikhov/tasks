@@ -2,7 +2,6 @@ package com.example.melikhovva.firstapplication;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +10,16 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-public final class SearchableActivity extends AppCompatActivity {
+public final class SearchableActivity extends ToolsBackedActivity {
+
+    private final GifLoader gifLoader;
+    private final GifsRequestor gifsRequestor;
+
+    public SearchableActivity() {
+        gifLoader = applicationToolsProvider.getGifLoader();
+        gifsRequestor = applicationToolsProvider.getGifsRequestor();
+    }
+
     @Override
     protected void onCreate(final @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +34,9 @@ public final class SearchableActivity extends AppCompatActivity {
 
         new SearchingGifsGrid((RecyclerView) findViewById(R.id.recycler_view),
                               new ArrayList<Gif>(),
+                              gifLoader,
                               searchView,
-                              new SearchingGifsDataLoader());
+                              new SearchingGifsDataLoader(gifsRequestor));
     }
 
     private void configureToolBar() {

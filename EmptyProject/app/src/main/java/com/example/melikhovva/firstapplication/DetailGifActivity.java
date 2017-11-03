@@ -4,14 +4,21 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.support.v7.widget.Toolbar;
 
-public final class DetailGifActivity extends AppCompatActivity {
+public final class DetailGifActivity extends ToolsBackedActivity {
 
     public static final String DETAIL_GIF = "DETAIL_GIF";
+
+    private final GifsStorage gifsStorage;
+    private final GifLoader gifLoader;
+
+    public DetailGifActivity() {
+        gifsStorage = applicationToolsProvider.getGifsStorage();
+        gifLoader = applicationToolsProvider.getGifLoader();
+    }
 
     @Override
     protected void onCreate(final @Nullable Bundle savedInstanceState) {
@@ -46,7 +53,6 @@ public final class DetailGifActivity extends AppCompatActivity {
         final View saveButton = findViewById(R.id.save_button);
         saveButton.setEnabled(false);
 
-        final GifsStorage gifsStorage = InstancesHolder.getGifsStorage();
         gifsStorage.doIfNotContains(gif, new Runnable() {
             @Override
             public void run() {
@@ -77,7 +83,7 @@ public final class DetailGifActivity extends AppCompatActivity {
     }
 
     private void displayGif(final Gif gif) {
-        InstancesHolder.getGifLoader().loadAndDisplay(gif,
-                                                      (ImageView) findViewById(R.id.image_view));
+        gifLoader.loadAndDisplay(gif,
+                                 (ImageView) findViewById(R.id.image_view));
     }
 }

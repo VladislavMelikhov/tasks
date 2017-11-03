@@ -6,7 +6,14 @@ import java.util.List;
 
 public final class AdditionalGifsDataLoader {
 
-    private boolean loadingAllowed = true;
+    private final GifsRequestor gifsRequestor;
+    private boolean loadingAllowed;
+
+    public AdditionalGifsDataLoader(final @NonNull GifsRequestor gifsRequestor) {
+        ValidatorNotNull.validateArguments(gifsRequestor);
+        this.gifsRequestor = gifsRequestor;
+        loadingAllowed = true;
+    }
 
     public void loadMore(final int offset,
                          final int limit,
@@ -15,15 +22,15 @@ public final class AdditionalGifsDataLoader {
 
         if (loadingAllowed) {
             loadingAllowed = false;
-            InstancesHolder.getGifsRequestor().requestTrending(offset,
-                                                               limit,
-                                                               new Optional.ActionWithContent<List<Gif>>() {
-                                                                   @Override
-                                                                   public void receive(final List<Gif> gifs) {
-                                                                       actionWithGifs.receive(gifs);
-                                                                       loadingAllowed = true;
-                                                                   }
-                                                               });
+            gifsRequestor.requestTrending(offset,
+                                          limit,
+                                          new Optional.ActionWithContent<List<Gif>>() {
+                                              @Override
+                                              public void receive(final List<Gif> gifs) {
+                                                  actionWithGifs.receive(gifs);
+                                                  loadingAllowed = true;
+                                              }
+                                          });
         }
     }
 }

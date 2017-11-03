@@ -4,15 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 
 import java.util.List;
 
-public final class MainActivity extends AppCompatActivity {
+public final class MainActivity extends ToolsBackedActivity {
+
+    private final GifsRequestor gifsRequestor;
+    private final GifLoader gifLoader;
+
+    public MainActivity() {
+        gifsRequestor = applicationToolsProvider.getGifsRequestor();
+        gifLoader = applicationToolsProvider.getGifLoader();
+    }
 
     @Override
     protected void onCreate(final @Nullable Bundle savedInstanceState) {
@@ -21,16 +27,17 @@ public final class MainActivity extends AppCompatActivity {
 
         configureToolBar(getString(R.string.main_activity_toolbar_text));
 
-        InstancesHolder.getGifsRequestor().requestTrending(0,
-                                                           getResources().getInteger(R.integer.initial_trending_gifs_count),
-                                                           new Optional.ActionWithContent<List<Gif>>() {
-                                                               @Override
-                                                               public void receive(final List<Gif> gifs) {
-                                                                   new EndlessGifsGrid((RecyclerView) findViewById(R.id.recycler_view),
-                                                                                       gifs,
-                                                                                       new AdditionalGifsDataLoader());
-                                                               }
-                                                           });
+        gifsRequestor.requestTrending(0,
+                                      getResources().getInteger(R.integer.initial_trending_gifs_count),
+                                      new Optional.ActionWithContent<List<Gif>>() {
+                                          @Override
+                                          public void receive(final List<Gif> gifs) {
+                                              new EndlessGifsGrid((RecyclerView) findViewById(R.id.recycler_view),
+                                                                  gifs,
+                                                                  gifLoader,
+                                                                  new AdditionalGifsDataLoader(gifsRequestor));
+                                          }
+                                      });
     }
 
     private void configureToolBar(final String title) {

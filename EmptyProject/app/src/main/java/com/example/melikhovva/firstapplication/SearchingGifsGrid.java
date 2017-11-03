@@ -10,9 +10,10 @@ public final class SearchingGifsGrid extends GifsGrid {
 
     public SearchingGifsGrid(final @NonNull RecyclerView recyclerView,
                              final @NonNull List<Gif> gifs,
+                             final @NonNull GifLoader gifLoader,
                              final @NonNull SearchView searchView,
                              final @NonNull SearchingGifsDataLoader searchingGifsDataLoader) {
-        super(recyclerView, gifs);
+        super(recyclerView, gifs, gifLoader);
         ValidatorNotNull.validateArguments(searchView, searchingGifsDataLoader);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

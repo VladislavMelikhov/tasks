@@ -14,8 +14,10 @@ public class GifsGrid {
     protected final GridLayoutManager gridLayoutManager;
     protected final GifsAdapter gifsAdapter;
 
-    public GifsGrid(final @NonNull RecyclerView recyclerView, final @NonNull List<Gif> gifs) {
-        ValidatorNotNull.validateArguments(recyclerView, gifs);
+    public GifsGrid(final @NonNull RecyclerView recyclerView,
+                    final @NonNull List<Gif> gifs,
+                    final @NonNull GifLoader gifLoader) {
+        ValidatorNotNull.validateArguments(recyclerView, gifs, gifLoader);
         ValidatorNotNull.validateArguments(gifs.toArray());
 
         this.recyclerView = recyclerView;
@@ -30,7 +32,7 @@ public class GifsGrid {
                                                   columnCount);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        gifsAdapter = new GifsAdapter(gifs);
+        gifsAdapter = new GifsAdapter(gifs, gifLoader);
         recyclerView.setAdapter(gifsAdapter);
 
         recyclerView.addItemDecoration(new SpacesItemDecoration(columnCount,

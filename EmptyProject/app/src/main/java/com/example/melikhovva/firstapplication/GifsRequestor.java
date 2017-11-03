@@ -10,6 +10,13 @@ public final class GifsRequestor {
 
     private static final String ENCODING = "UTF-8";
 
+    private final GifsConverter gifsConverter;
+
+    public GifsRequestor(final @NonNull GifsConverter gifsConverter) {
+        ValidatorNotNull.validateArguments(gifsConverter);
+        this.gifsConverter = gifsConverter;
+    }
+
     public void requestTrending(final int offset,
                                 final int limit,
                                 final @NonNull Optional.ActionWithContent<List<Gif>> actionWithGifs) {
@@ -73,7 +80,7 @@ public final class GifsRequestor {
                                 @Override
                                 public void receive(final String body) {
 
-                                    InstancesHolder.getGifsConverter().convertFromJSON(body)
+                                    gifsConverter.convertFromJSON(body)
                                             .doWithContentIfExists(actionWithGifs);
                                 }
                             });

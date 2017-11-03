@@ -11,8 +11,9 @@ public final class EndlessGifsGrid extends GifsGrid {
 
     public EndlessGifsGrid(final @NonNull RecyclerView recyclerView,
                            final @NonNull List<Gif> gifs,
+                           final @NonNull GifLoader gifLoader,
                            final @NonNull AdditionalGifsDataLoader additionalGifsDataLoader) {
-        super(recyclerView, gifs);
+        super(recyclerView, gifs, gifLoader);
         ValidatorNotNull.validateArguments(additionalGifsDataLoader);
 
         currentGifsCount += gifs.size();

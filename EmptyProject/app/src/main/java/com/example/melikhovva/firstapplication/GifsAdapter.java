@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,13 @@ import java.util.List;
 public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final List<Gif> gifs = new ArrayList<>();
+    private final GifLoader gifLoader;
 
-    public GifsAdapter(final @NonNull List<Gif> gifs) {
-        ValidatorNotNull.validateArguments(gifs);
+    public GifsAdapter(final @NonNull List<Gif> gifs, final @NonNull GifLoader gifLoader) {
+        ValidatorNotNull.validateArguments(gifs, gifLoader);
         ValidatorNotNull.validateArguments(gifs.toArray());
         this.gifs.addAll(gifs);
+        this.gifLoader = gifLoader;
     }
 
     public void addAll(final @NonNull List<Gif> gifs) {
@@ -43,7 +44,8 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
         ValidatorNotNull.validateArguments(parent);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.square_image,
                                                                                parent,
-                                                                               false));
+                                                                               false),
+                              gifLoader);
     }
 
     @Override
@@ -66,12 +68,14 @@ public final class GifsAdapter extends RecyclerView.Adapter<ViewHolder> {
 final class ViewHolder extends RecyclerView.ViewHolder {
 
     private final ImageView imageView;
+    private final GifLoader gifLoader;
 
-    public ViewHolder(final @NonNull View view) {
+    public ViewHolder(final @NonNull View view, final @NonNull GifLoader gifLoader) {
         super(view);
 
         imageView = (ImageView) view.findViewById(R.id.image_view);
         view.setBackgroundColor(Color.BLUE);
+        this.gifLoader = gifLoader;
     }
 
     public void setGif(final @NonNull Gif gif) {
@@ -79,7 +83,7 @@ final class ViewHolder extends RecyclerView.ViewHolder {
 
         final Context context = imageView.getContext();
 
-        InstancesHolder.getGifLoader().loadAndDisplay(gif, imageView);
+        gifLoader.loadAndDisplay(gif, imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +97,6 @@ final class ViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void clearView() {
-        InstancesHolder.getGifLoader().stopLoading(imageView);
+        gifLoader.stopLoading(imageView);
     }
 }
