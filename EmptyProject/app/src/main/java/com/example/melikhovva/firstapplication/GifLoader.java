@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
@@ -12,16 +13,16 @@ import java.util.concurrent.ExecutionException;
 
 public final class GifLoader {
 
-    private final Context context;
+    private final RequestManager requestManager;
 
     public GifLoader(final @NonNull Context context) {
         ValidatorNotNull.validateArguments(context);
-        this.context = context;
+        requestManager = Glide.with(context);
     }
 
     public void loadAndDisplay(final @NonNull Gif gif, final @NonNull ImageView imageView) {
         ValidatorNotNull.validateArguments(gif, imageView);
-        Glide.with(context)
+        requestManager
                 .load(gif.getUrl())
                 .asGif()
                 .skipMemoryCache(true)
@@ -36,7 +37,7 @@ public final class GifLoader {
     public Optional<File> load(final @NonNull Gif gif) {
         ValidatorNotNull.validateArguments(gif);
         try {
-            return new Existing<>(Glide.with(context)
+            return new Existing<>(requestManager
                                           .load(gif.getUrl())
                                           .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                           .get());

@@ -17,7 +17,11 @@ public final class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        applicationToolsProvider = new ApplicationToolsProvider(this);
-        application = this;
+        if (applicationToolsProvider == null) {
+            applicationToolsProvider = new ApplicationToolsProvider(this);
+        }
+        if (application == null) {
+            application = this;
+        }
     }
 }
